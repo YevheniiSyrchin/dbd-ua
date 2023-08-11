@@ -1,0 +1,14 @@
+@import "./reset.css";
+@import "./mixins.scss";
+@import "./colors.scss";
+@import "./container.scss";
+@import "./home.scss";
+@import "./carousel.scss";
+@import "./roulette.scss";
+@import "./navigation.scss";
+@import "./footer.scss";
+
+body {
+  height: 100%;
+  background-color: $black;
+}

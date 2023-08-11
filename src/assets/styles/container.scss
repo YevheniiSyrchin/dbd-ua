@@ -1,0 +1,11 @@
+.App {
+  @include flex(column, center, center);
+  min-height: 100vh;
+}
+.container {
+  margin: 60px auto;
+  padding: 80px 120px 40px;
+}
+.toCenter {
+  @include flex(row, center, center);
+}
