@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import TwitchEmbed from "./TwitchChannel";
+import TwitchStreamEmbed from "./TwitchChannel";
 
 const Home: FC = () => {
-  return <TwitchEmbed />;
+  return <TwitchStreamEmbed />;
 };
 
 export default Home;

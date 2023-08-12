@@ -1,0 +1,69 @@
+.formOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  z-index: 100;
+}
+.authorization-form {
+  @include flex(column, center, center);
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+.authorization-form label {
+  display: block;
+}
+.authorization-form input {
+  width: 100%;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.authorization-form-submit {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  &:active {
+    transform: scale(1.1);
+  }
+}
+.field-form {
+  width: 100%;
+  margin-bottom: 14px;
+}
+.password-input {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  position: relative;
+}
+.password-toggle-button {
+  position: absolute;
+  right: 0;
+  width: 36px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.password-toggle-button img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

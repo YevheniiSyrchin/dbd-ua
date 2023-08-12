@@ -1,9 +1,12 @@
 .navContainer {
-  @include flex(row, start, start);
+  @include flex(row, space-between, start);
   margin-top: 40px;
   width: 1800px;
 }
 .navigation {
+  @include flex(row, end, end);
+}
+.authorization {
   @include flex(row, end, end);
 }
 .button {
