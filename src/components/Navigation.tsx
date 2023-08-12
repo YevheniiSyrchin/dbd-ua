@@ -32,17 +32,17 @@ const Navigation: FC = () => {
     <nav className="navContainer">
       <ul className="navigation">
         <li>
-          <Link to="/dbd-ua/" className="button">
+          <Link to="/" className="button">
             Головна
           </Link>
         </li>
         <li>
-          <Link to="/dbd-ua/news" className="button">
+          <Link to="news" className="button">
             Новини
           </Link>
         </li>
         <li>
-          <Link to="/dbd-ua/roulette" className="button">
+          <Link to="roulette" className="button">
             Рулетка
           </Link>
         </li>

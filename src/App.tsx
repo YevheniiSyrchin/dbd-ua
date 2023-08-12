@@ -15,9 +15,9 @@ const App: FC = () => {
         <div className="App">
           <Navigation />
           <Routes>
-            <Route path="/dbd-ua/" element={<Home />} />
-            <Route path="/dbd-ua/news" element={<News />} />
-            <Route path="/dbd-ua/roulette" element={<Roulette />} />
+            <Route path="/" element={<Home />} />
+            <Route path="news" element={<News />} />
+            <Route path="roulette" element={<Roulette />} />
           </Routes>
           <Footer />
         </div>
