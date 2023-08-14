@@ -1,15 +1,26 @@
 @import "./reset.css";
 @import "./mixins.scss";
 @import "./colors.scss";
+@import "./fonts.scss";
 @import "./container.scss";
 @import "./home.scss";
 @import "./carousel.scss";
 @import "./roulette.scss";
 @import "./navigation.scss";
 @import "./authorization.scss";
+@import "./flag.scss";
+@import "./aside.scss";
 @import "./footer.scss";
+@import "./media.scss";
 
 body {
   height: 100%;
   background-color: $black;
+  border: none;
+}
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

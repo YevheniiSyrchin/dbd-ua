@@ -1,0 +1,36 @@
+@media (max-width: 2440px) {
+  .container {
+    max-width: 900px;
+  }
+  .ghostFace {
+    width: 480px;
+  }
+  .survivors {
+    width: 480px;
+  }
+}
+@media (max-width: 1920px) {
+  .container {
+    max-width: 800px;
+  }
+  .navContainer {
+    max-width: 1200px;
+  }
+  .ghostFace {
+    width: 380px;
+  }
+  .survivors {
+    width: 380px;
+  }
+}
+@media (max-width: 1550px) {
+  .container {
+    max-width: 700px;
+  }
+  .ghostFace {
+    width: 300px;
+  }
+  .survivors {
+    width: 300px;
+  }
+}

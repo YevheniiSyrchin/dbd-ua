@@ -1,11 +1,21 @@
 import React from "react";
 import { TwitchEmbed } from "react-twitch-embed";
 
-function TwitchStreamEmbed() {
+function MultiTwitchStreamEmbed() {
+  const channels = ["fish_n_fire"];
+
   return (
     <div>
-      <TwitchEmbed channel="n0oP" width="780px" withChat={false} />
+      {channels.map((channel) => (
+        <TwitchEmbed
+          key={channel}
+          channel={channel}
+          width="100%"
+          withChat={false}
+        />
+      ))}
     </div>
   );
 }
-export default TwitchStreamEmbed;
+
+export default MultiTwitchStreamEmbed;

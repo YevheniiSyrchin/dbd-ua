@@ -1,0 +1,23 @@
+.flag {
+  position: relative;
+  width: 100%;
+  height: 80px;
+}
+
+.flag::before,
+.flag::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 50%;
+  width: 100%;
+}
+
+.flag::before {
+  background-color: $flagBlue;
+}
+
+.flag::after {
+  background-color: $flagYellow;
+  top: 50%;
+}

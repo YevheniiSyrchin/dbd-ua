@@ -37,7 +37,7 @@ const Navigation: FC = () => {
           </Link>
         </li>
         <li>
-          <Link to="news" className="button">
+          <Link to="news" className="hidden">
             Новини
           </Link>
         </li>
@@ -58,8 +58,8 @@ const Navigation: FC = () => {
       {(showLoginForm || showRegistrationForm) && (
         <div className="formOverlay" onClick={closeForm} ref={overlayRef}>
           <div className="formContainer" onClick={handleFormClick}>
-            {showLoginForm && <LoginForm />}
-            {showRegistrationForm && <RegistrationForm />}
+            {showLoginForm && <LoginForm onClose={closeForm} />}
+            {showRegistrationForm && <RegistrationForm onClose={closeForm} />}
           </div>
         </div>
       )}

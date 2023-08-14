@@ -1,7 +1,9 @@
 .navContainer {
-  @include flex(row, space-between, start);
-  margin-top: 40px;
-  width: 1800px;
+  @include flex(row, space-between, center);
+  margin: 30px 0;
+  max-width: 1600px;
+  width: 100%;
+  padding: 0 40px;
 }
 .navigation {
   @include flex(row, end, end);

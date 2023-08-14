@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { isValidLogin, isValidPassword, isValidTwitchLink } from "./validation";
+import closeFormButton from "../assets/images/close.png";
 import showPasswordImage from "../assets/images/visible.png";
 import hidePasswordImage from "../assets/images/hide.png";
 
-const RegistrationForm = () => {
+const RegistrationForm = ({ onClose }: { onClose: () => void }) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [twitchAccount, setTwitchAccount] = useState("");
@@ -63,6 +64,9 @@ const RegistrationForm = () => {
 
   return (
     <form className="authorization-form" onSubmit={handleRegistration}>
+      <button type="button" className="close-button" onClick={onClose}>
+        <img src={closeFormButton} alt="close" />
+      </button>
       <div className="field-form">
         <label htmlFor="login">Логін*:</label>
         <input

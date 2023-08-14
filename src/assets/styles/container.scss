@@ -3,9 +3,15 @@
   min-height: 100vh;
 }
 .container {
-  margin: 60px auto;
-  padding: 80px 120px 40px;
+  max-width: 1100px;
+  padding: 30px 40px;
+  width: 100%;
+  border-radius: 20px;
+  background-color: $black;
 }
 .toCenter {
-  @include flex(row, center, center);
+  @include flex(column, center, center);
+}
+.hidden {
+  display: none;
 }

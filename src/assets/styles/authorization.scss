@@ -13,24 +13,33 @@
 }
 .authorization-form {
   @include flex(column, center, center);
+  position: relative;
   max-width: 400px;
   margin: 0 auto;
   padding: 40px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
+  & label {
+    display: block;
+  }
+  & input {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
 }
-.authorization-form label {
-  display: block;
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 4px;
+  width: 40px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
-.authorization-form input {
-  width: 100%;
-  padding: 10px;
-  background-color: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
 .authorization-form-submit {
   background-color: #007bff;
   color: #fff;
