@@ -1,11 +1,14 @@
-import React, { FC, useState, useRef } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 import LoginForm from "./LoginForm";
 import RegistrationForm from "./RegistrationForm";
+import Overlay from "./Overlay";
 
 const Navigation: FC = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const handleLoginClick = () => {
     setShowLoginForm(true);
@@ -17,15 +20,22 @@ const Navigation: FC = () => {
     setShowLoginForm(false);
   };
 
-  const overlayRef = useRef(null);
-
   const closeForm = () => {
     setShowLoginForm(false);
     setShowRegistrationForm(false);
   };
 
-  const handleFormClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
+  useEffect(() => {
+    const tokens = Cookies.get("tokens");
+
+    if (tokens) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    Cookies.remove("tokens");
+    setIsLoggedIn(false);
   };
 
   return (
@@ -48,20 +58,33 @@ const Navigation: FC = () => {
         </li>
       </ul>
       <div className="authorization">
-        <button className="button" onClick={handleLoginClick}>
-          Увійти
-        </button>
-        <button className="button" onClick={handleRegistrationClick}>
-          Реєстрація
-        </button>
+        {isLoggedIn ? (
+          <>
+            <Link to="account" className="button">
+              Аккаунт
+            </Link>
+            <button className="button" onClick={handleLogout}>
+              Вийти
+            </button>
+          </>
+        ) : (
+          <>
+            <button className="button" onClick={handleLoginClick}>
+              Увійти
+            </button>
+            <button className="button" onClick={handleRegistrationClick}>
+              Реєстрація
+            </button>
+          </>
+        )}
       </div>
       {(showLoginForm || showRegistrationForm) && (
-        <div className="formOverlay" onClick={closeForm} ref={overlayRef}>
-          <div className="formContainer" onClick={handleFormClick}>
-            {showLoginForm && <LoginForm onClose={closeForm} />}
-            {showRegistrationForm && <RegistrationForm onClose={closeForm} />}
-          </div>
-        </div>
+        <Overlay onClose={closeForm}>
+          {showLoginForm && (
+            <LoginForm onClose={closeForm} setIsLoggedIn={setIsLoggedIn} />
+          )}
+          {showRegistrationForm && <RegistrationForm onClose={closeForm} />}
+        </Overlay>
       )}
     </nav>
   );

@@ -19,13 +19,14 @@ const Aside: FC = () => {
   return (
     <div>
       <div className="background">
-        <img src={background} />
+        <img src={background} alt="background" />
       </div>
       <img
         src={ghostFaceImg}
         className={`ghostFace ${showFadeIn ? "fade-in" : ""}`}
+        alt="grostFace"
       />
-      <img src={survivors} className="survivors" />
+      <img src={survivors} className="survivors" alt="survivors" />
     </div>
   );
 };

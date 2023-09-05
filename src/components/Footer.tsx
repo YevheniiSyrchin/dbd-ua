@@ -7,7 +7,11 @@ const Footer: FC = () => {
       <div>
         <ul className="footer-info">
           <li>
-            <a href="https://discord.gg/b9J2Dw6Y" target="_blank">
+            <a
+              href="https://discord.gg/b9J2Dw6Y"
+              target="_blank"
+              rel="noreferrer"
+            >
               <img src={discordImg} alt="" className="image" />
             </a>
           </li>

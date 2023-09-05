@@ -76,3 +76,17 @@
   justify-content: center;
   align-items: center;
 }
+
+.success-message {
+  @include flex(column, center, center);
+  padding: 30px;
+  border-radius: 20px;
+  background-color: #fff;
+  & img {
+    margin-top: 30px;
+    width: 80px;
+  }
+}
+.authenticationError {
+  margin-top: 10px;
+}
