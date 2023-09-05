@@ -8,7 +8,7 @@ const Footer: FC = () => {
         <ul className="footer-info">
           <li>
             <a
-              href="https://discord.gg/b9J2Dw6Y"
+              href="https://discord.gg/sRzWWDqDBH"
               target="_blank"
               rel="noreferrer"
             >

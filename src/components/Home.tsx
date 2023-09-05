@@ -1,6 +1,5 @@
 import React, { FC, Suspense } from "react";
 import TwitchStreamEmbed from "./TwitchChannel";
-import TwitchTest from "./TwitchTest";
 
 const Home: FC = () => {
   return (
@@ -18,7 +17,7 @@ const Home: FC = () => {
         </p>
       </div>
       <div className="streams">
-        <TwitchTest />
+        <TwitchStreamEmbed />
       </div>
     </main>
   );

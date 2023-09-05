@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import TwitchEmbedVideo from "react-twitch-embed-video";
 
 interface Streamer {
   nickname: string;
@@ -8,8 +7,12 @@ interface Streamer {
 
 function TwitchStreams() {
   const [streamerNicknames, setStreamerNicknames] = useState<string[]>([]);
+  const [currentStreamIndex, setCurrentStreamIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
+
     fetch(
       "https://dbd-rest-api.eremenko.top/wp-json/get/v1/pages?page-type=main-page"
     )
@@ -33,25 +36,45 @@ function TwitchStreams() {
       })
       .catch((error) => {
         console.error("Error fetching streamer data:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
+  const nextStream = () => {
+    setCurrentStreamIndex((prevIndex) =>
+      prevIndex === streamerNicknames.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const prevStream = () => {
+    setCurrentStreamIndex((prevIndex) =>
+      prevIndex === 0 ? streamerNicknames.length - 1 : prevIndex - 1
+    );
+  };
+
   return (
-    <div>
-      {streamerNicknames.map((nickname) => (
-        <div key={nickname}>
-          <TwitchEmbedVideo
-            channel={nickname}
+    <div className="carousel">
+      {isLoading ? (
+        <div>Зараз етерять...</div>
+      ) : (
+        <>
+          <button
+            className="carousel-button prev"
+            onClick={prevStream}
+          ></button>
+          <iframe
+            src={`https://player.twitch.tv/?channel=${streamerNicknames[currentStreamIndex]}&parent=dbd-ua.eremenko.top`}
             width="100%"
             height="450px"
-            layout="video"
-            targetId="twitch-embed"
-            theme="dark"
-            autoplay={false}
-            muted={false}
-          />
-        </div>
-      ))}
+          ></iframe>
+          <button
+            className="carousel-button next"
+            onClick={nextStream}
+          ></button>
+        </>
+      )}
     </div>
   );
 }
