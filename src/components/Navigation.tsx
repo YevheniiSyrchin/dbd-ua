@@ -26,15 +26,15 @@ const Navigation: FC = () => {
   };
 
   useEffect(() => {
-    const tokens = Cookies.get("tokens");
+    const userHash = Cookies.get("userHash");
 
-    if (tokens) {
+    if (userHash) {
       setIsLoggedIn(true);
     }
   }, []);
 
   const handleLogout = () => {
-    Cookies.remove("tokens");
+    Cookies.remove("userHash");
     setIsLoggedIn(false);
   };
 

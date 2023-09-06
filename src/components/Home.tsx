@@ -1,5 +1,5 @@
 import React, { FC, Suspense } from "react";
-import TwitchStreamEmbed from "./TwitchChannel";
+import TwitchStreamEmbed from "./TwitchStreams";
 
 const Home: FC = () => {
   return (

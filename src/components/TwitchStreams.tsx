@@ -5,6 +5,14 @@ interface Streamer {
   "stream-info": string;
 }
 
+function LoadingSpinner() {
+  return (
+    <div className="loading-spinner">
+      <div className="spinner"></div>
+    </div>
+  );
+}
+
 function TwitchStreams() {
   const [streamerNicknames, setStreamerNicknames] = useState<string[]>([]);
   const [currentStreamIndex, setCurrentStreamIndex] = useState(0);
@@ -57,7 +65,7 @@ function TwitchStreams() {
   return (
     <div className="carousel">
       {isLoading ? (
-        <div>Зараз етерять...</div>
+        <LoadingSpinner />
       ) : (
         <>
           <button

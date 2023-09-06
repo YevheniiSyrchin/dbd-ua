@@ -11,7 +11,7 @@ const LoginForm = ({
   setIsLoggedIn,
 }: {
   onClose: () => void;
-  setIsLoggedIn: (loggedIn: boolean) => void;
+  setIsLoggedIn: (loggedIn: boolean, userHash: string | undefined) => void;
 }) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -38,15 +38,13 @@ const LoginForm = ({
         const loginSuccess = response.data.response["login-success"];
 
         if (loginSuccess === true) {
-          const tokens = {
-            accessToken: "your_access_token",
-            refreshToken: "your_refresh_token",
-          };
-          Cookies.set("tokens", JSON.stringify(tokens), { expires: 7 });
+          const userHash = response.data.response["user-hash-encode"];
+
+          Cookies.set("userHash", userHash, { expires: 7 });
 
           setShowForm(false);
 
-          setIsLoggedIn(true);
+          setIsLoggedIn(true, userHash);
         } else {
           setLoginError(true);
         }
