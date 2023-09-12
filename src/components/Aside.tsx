@@ -1,32 +1,51 @@
 import React, { FC, useEffect, useState } from "react";
-import ghostFaceImg from "../assets/images/ghostface.png";
-import survivors from "../assets/images/survivors.png";
-import background from "../assets/images/fog-background.jpg";
+import Axios from "axios";
 
 const Aside: FC = () => {
   const [showFadeIn, setShowFadeIn] = useState(true);
+  const [images, setImages] = useState({
+    background: "",
+    ghostFaceImg: "",
+    survivors: "",
+  });
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowFadeIn(false);
-    }, 2000);
+    Axios.get("https://dbd-rest-api.eremenko.top/wp-json/get/v1/options")
+      .then((response) => {
+        const options = response.data.response.options;
+        const { image_full, image_left, image_right } =
+          options["background-images-main-page"];
 
-    return () => {
-      clearTimeout(timeout);
-    };
+        setImages({
+          background: image_full,
+          ghostFaceImg: image_right,
+          survivors: image_left,
+        });
+
+        const timeout = setTimeout(() => {
+          setShowFadeIn(false);
+        }, 2000);
+
+        return () => {
+          clearTimeout(timeout);
+        };
+      })
+      .catch((error) => {
+        console.error("Data fetching error:", error);
+      });
   }, []);
 
   return (
     <div>
       <div className="background">
-        <img src={background} alt="background" />
+        <img src={images.background} alt="background" />
       </div>
       <img
-        src={ghostFaceImg}
+        src={images.ghostFaceImg}
         className={`ghostFace ${showFadeIn ? "fade-in" : ""}`}
-        alt="grostFace"
+        alt="ghostFace"
       />
-      <img src={survivors} className="survivors" alt="survivors" />
+      <img src={images.survivors} className="survivors" alt="survivors" />
     </div>
   );
 };

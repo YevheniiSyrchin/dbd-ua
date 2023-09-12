@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { isValidLogin, isValidPassword, isValidTwitchLink } from "./validation";
 import axios from "axios";
+import Cookies from "js-cookie";
 import closeFormButton from "../assets/images/close.png";
 import showPasswordImage from "../assets/images/visible.png";
 import hidePasswordImage from "../assets/images/hide.png";
 import successImage from "../assets/images/success.png";
 
-const RegistrationForm = ({ onClose }: { onClose: () => void }) => {
+const RegistrationForm = ({
+  onClose,
+  setIsLoggedIn,
+}: {
+  onClose: () => void;
+  setIsLoggedIn: (loggedIn: boolean, userHash: string | undefined) => void;
+}) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [twitchAccount, setTwitchAccount] = useState("");
@@ -55,12 +62,45 @@ const RegistrationForm = ({ onClose }: { onClose: () => void }) => {
         const action = response.data.response["new-created-user-arr"]["action"];
         if (action === "created") {
           setShowForm(false);
+          handleLoginAfterRegistration();
         } else {
           setLoginTaken(true);
         }
       }
     } catch (error) {
       console.error("Registration error:", error);
+    }
+  };
+
+  const handleLoginAfterRegistration = async () => {
+    try {
+      const response = await axios.get(
+        `https://dbd-rest-api.eremenko.top/wp-json/authorization/user/v1/twitch-user-action`,
+        {
+          params: {
+            "twitch-user-login": btoa(login),
+            "twitch-user-pass": btoa(password),
+            "twitch-user-action": "login",
+          },
+        }
+      );
+
+      if (response.data) {
+        const loginSuccess = response.data.response["login-success"];
+
+        if (loginSuccess === true) {
+          const userHash = response.data.response["user-hash-encode"];
+
+          Cookies.set("userHash", userHash, { expires: 365 });
+
+          setShowForm(false);
+          setIsLoggedIn(true, userHash);
+        } else {
+          setLoginError("Неправильний логін або пароль.");
+        }
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
     }
   };
 
@@ -146,9 +186,13 @@ const RegistrationForm = ({ onClose }: { onClose: () => void }) => {
           )}
         </form>
       ) : (
-        <div className="success-message">
+        <div className="success-message parent">
+          <button type="button" className="close-button" onClick={onClose}>
+            <img src={closeFormButton} alt="close" />
+          </button>
+
           <p>Успішна реєстрація!</p>
-          <img src={successImage} alt="success" />
+          <img className="successImg" src={successImage} alt="success" />
         </div>
       )}
     </div>

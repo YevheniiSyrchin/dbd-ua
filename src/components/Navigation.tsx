@@ -8,7 +8,7 @@ import Overlay from "./Overlay";
 const Navigation: FC = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false);
 
   const handleLoginClick = () => {
     setShowLoginForm(true);
@@ -29,13 +29,13 @@ const Navigation: FC = () => {
     const userHash = Cookies.get("userHash");
 
     if (userHash) {
-      setIsLoggedIn(true);
+      setUserLoggedIn(true);
     }
   }, []);
 
   const handleLogout = () => {
     Cookies.remove("userHash");
-    setIsLoggedIn(false);
+    setUserLoggedIn(false);
   };
 
   return (
@@ -58,7 +58,7 @@ const Navigation: FC = () => {
         </li>
       </ul>
       <div className="authorization">
-        {isLoggedIn ? (
+        {userLoggedIn ? (
           <>
             <Link to="account" className="button">
               Аккаунт
@@ -81,9 +81,14 @@ const Navigation: FC = () => {
       {(showLoginForm || showRegistrationForm) && (
         <Overlay onClose={closeForm}>
           {showLoginForm && (
-            <LoginForm onClose={closeForm} setIsLoggedIn={setIsLoggedIn} />
+            <LoginForm onClose={closeForm} setIsLoggedIn={setUserLoggedIn} />
           )}
-          {showRegistrationForm && <RegistrationForm onClose={closeForm} />}
+          {showRegistrationForm && (
+            <RegistrationForm
+              onClose={closeForm}
+              setIsLoggedIn={setUserLoggedIn}
+            />
+          )}
         </Overlay>
       )}
     </nav>

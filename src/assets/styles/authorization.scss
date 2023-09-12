@@ -13,7 +13,6 @@
 }
 .authorization-form {
   @include flex(column, center, center);
-  position: relative;
   max-width: 400px;
   margin: 0 auto;
   padding: 40px;
@@ -30,6 +29,9 @@
     border: 1px solid #ccc;
     border-radius: 5px;
   }
+}
+.parent {
+  position: relative;
 }
 .close-button {
   position: absolute;
@@ -79,10 +81,10 @@
 
 .success-message {
   @include flex(column, center, center);
-  padding: 30px;
+  padding: 50px;
   border-radius: 20px;
   background-color: #fff;
-  & img {
+  & .successImg {
     margin-top: 30px;
     width: 80px;
   }

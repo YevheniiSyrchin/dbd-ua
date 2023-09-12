@@ -40,7 +40,7 @@ const LoginForm = ({
         if (loginSuccess === true) {
           const userHash = response.data.response["user-hash-encode"];
 
-          Cookies.set("userHash", userHash, { expires: 7 });
+          Cookies.set("userHash", userHash, { expires: 365 });
 
           setShowForm(false);
 
@@ -57,7 +57,7 @@ const LoginForm = ({
   return (
     <div>
       {showForm ? (
-        <form className="authorization-form" onSubmit={handleLogin}>
+        <form className="authorization-form parent" onSubmit={handleLogin}>
           <button type="button" className="close-button" onClick={onClose}>
             <img src={closeFormButton} alt="close" />
           </button>
@@ -103,9 +103,13 @@ const LoginForm = ({
           )}
         </form>
       ) : (
-        <div className="success-message">
+        <div className="success-message parent">
+          <button type="button" className="close-button" onClick={onClose}>
+            <img src={closeFormButton} alt="close" />
+          </button>
+
           <p>Успішний вхід!</p>
-          <img src={successImage} alt="success" />
+          <img className="successImg" src={successImage} alt="success" />
         </div>
       )}
     </div>

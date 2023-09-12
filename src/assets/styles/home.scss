@@ -1,6 +1,10 @@
 .text {
   text-align: center;
   margin: 20px 0 60px;
+
+  a:link {
+    color: $flagBlue;
+  }
 }
 .streams {
   margin: 60px 0 20px;
