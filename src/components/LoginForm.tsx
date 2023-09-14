@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import closeFormButton from "../assets/images/close.png";
@@ -18,6 +18,7 @@ const LoginForm = ({
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [showForm, setShowForm] = useState(true);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,8 +43,8 @@ const LoginForm = ({
 
           Cookies.set("userHash", userHash, { expires: 365 });
 
+          setShowSuccessMessage(true);
           setShowForm(false);
-
           setIsLoggedIn(true, userHash);
         } else {
           setLoginError(true);
@@ -53,6 +54,16 @@ const LoginForm = ({
       console.error("Error during login:", error);
     }
   };
+
+  useEffect(() => {
+    if (showSuccessMessage) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [onClose]);
 
   return (
     <div>

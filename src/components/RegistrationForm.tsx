@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { isValidLogin, isValidPassword, isValidTwitchLink } from "./validation";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -22,6 +22,8 @@ const RegistrationForm = ({
   const [twitchAccountError, setTwitchAccountError] = useState("");
   const [loginTaken, setLoginTaken] = useState(false);
   const [showForm, setShowForm] = useState(true);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,6 +63,7 @@ const RegistrationForm = ({
       if (response.data && response.data.response) {
         const action = response.data.response["new-created-user-arr"]["action"];
         if (action === "created") {
+          setShowSuccessMessage(true);
           setShowForm(false);
           handleLoginAfterRegistration();
         } else {
@@ -119,11 +122,19 @@ const RegistrationForm = ({
     setTwitchAccountError("");
   };
 
-  const [passwordVisible, setPasswordVisible] = useState(false);
-
   const handleTogglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+
+  useEffect(() => {
+    if (showSuccessMessage) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [onClose]);
 
   return (
     <div>

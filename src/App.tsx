@@ -11,6 +11,7 @@ import UserAccount from "./components/UserAccount";
 import Footer from "./components/Footer";
 import PageMetadata from "./components/PageMetadata";
 import UserHashProvider from "./components/userHashProvider";
+import FaviconChanger from "./components/FaviconChanger";
 import "./assets/styles/styles.scss";
 
 const App: FC = () => {
@@ -19,6 +20,7 @@ const App: FC = () => {
       <ErrorBoundary>
         <UserHashProvider>
           <div className="App">
+            <FaviconChanger />
             <Flag />
             <Navigation />
             <div className="content">

@@ -20,7 +20,7 @@
   right: 0;
   z-index: -1;
   box-sizing: border-box;
-  animation: move 4s linear infinite 0s;
+  animation: move 3s linear infinite, fadeInKiller 2s ease;
 }
 
 .survivors {
@@ -29,17 +29,13 @@
   bottom: 200px;
   left: 10px;
   z-index: -1;
-  animation: fadeInSurvivors 2s ease;
-}
-
-.fade-in {
-  animation: fadeInKiller 2s ease;
+  animation: fadeInSurvivors 1.5s ease;
 }
 
 @keyframes fadeInKiller {
   from {
     opacity: 0;
-    transform: translateX(30%);
+    transform: translateY(2%);
   }
   to {
     opacity: 1;
@@ -50,7 +46,7 @@
 @keyframes fadeInSurvivors {
   from {
     opacity: 0;
-    transform: translateX(-10%);
+    transform: translateX(-5%);
   }
   to {
     opacity: 1;
@@ -59,13 +55,11 @@
 }
 
 @keyframes move {
-  0% {
-    transform: translateY(0);
+  0%,
+  100% {
+    bottom: -18px;
   }
   50% {
-    transform: translateY(2%);
-  }
-  100% {
-    transform: translateY(0);
+    bottom: 0;
   }
 }
