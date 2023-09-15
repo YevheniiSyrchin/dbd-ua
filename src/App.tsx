@@ -20,7 +20,6 @@ const App: FC = () => {
       <ErrorBoundary>
         <UserHashProvider>
           <div className="App">
-            <FaviconChanger />
             <Flag />
             <Navigation />
             <div className="content">

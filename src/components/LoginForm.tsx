@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import closeFormButton from "../assets/images/close.png";
@@ -6,13 +6,12 @@ import showPasswordImage from "../assets/images/visible.png";
 import hidePasswordImage from "../assets/images/hide.png";
 import successImage from "../assets/images/success.png";
 
-const LoginForm = ({
-  onClose,
-  setIsLoggedIn,
-}: {
+interface LoginFormProps {
   onClose: () => void;
   setIsLoggedIn: (loggedIn: boolean, userHash: string | undefined) => void;
-}) => {
+}
+
+const LoginForm: FC<LoginFormProps> = ({ onClose, setIsLoggedIn }) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -25,7 +24,7 @@ const LoginForm = ({
 
     try {
       const response = await axios.get(
-        `https://dbd-rest-api.eremenko.top/wp-json/authorization/user/v1/twitch-user-action`,
+        "https://dbd-rest-api.eremenko.top/wp-json/authorization/user/v1/twitch-user-action",
         {
           params: {
             "twitch-user-login": btoa(login),
@@ -63,7 +62,7 @@ const LoginForm = ({
 
       return () => clearTimeout(timer);
     }
-  }, [onClose]);
+  }, [onClose, showSuccessMessage]);
 
   return (
     <div>

@@ -9,10 +9,9 @@ function TwitchStreams() {
   const [streamerNicknames, setStreamerNicknames] = useState<string[]>([]);
   const [currentStreamIndex, setCurrentStreamIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setIsLoading(true);
-
+  const fetchData = () => {
     fetch(
       "https://dbd-rest-api.eremenko.top/wp-json/get/v1/pages?page-type=main-page"
     )
@@ -30,16 +29,20 @@ function TwitchStreams() {
             .filter((streamer) => streamer["stream-info"] !== "offline")
             .map((streamer) => streamer.nickname);
           setStreamerNicknames(filteredStreamers);
+          setIsLoading(false);
         } else {
-          console.error("API response format is not as expected:", data);
+          setError("API response format is not as expected.");
+          setIsLoading(false);
         }
       })
       .catch((error) => {
-        console.error("Error fetching streamer data:", error);
-      })
-      .finally(() => {
+        setError("Error fetching streamer data: " + error.message);
         setIsLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const nextStream = () => {
@@ -60,6 +63,8 @@ function TwitchStreams() {
         <div className="loading-spinner">
           <div className="spinner"></div>
         </div>
+      ) : error ? (
+        <div className="error-message">{error}</div>
       ) : (
         <>
           <button

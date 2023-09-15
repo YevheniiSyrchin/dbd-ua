@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import TwitchStreamEmbed from "./TwitchStreams";
 
-async function fetchData() {
+async function fetchApiData(): Promise<string | null> {
   try {
     const response = await fetch(
       "https://dbd-rest-api.eremenko.top/wp-json/get/v1/pages?page-type=main-page"
@@ -22,31 +22,30 @@ async function fetchData() {
 const Home: FC = () => {
   const [apiData, setApiData] = useState<string | null>(null);
 
-  useEffect(() => {
-    const loadTextFromLocalStorage = () => {
-      const localText = localStorage.getItem("text");
-      if (localText) {
-        setApiData(localText);
-      }
-    };
+  const loadTextFromLocalStorage = () => {
+    const localText = localStorage.getItem("text");
+    if (localText) {
+      setApiData(localText);
+    }
+  };
 
-    const fetchDataAndUpdateLocalStorage = async () => {
-      try {
-        const data = await fetchData();
-        if (data) {
-          const localText = localStorage.getItem("text");
-          if (localText !== data) {
-            localStorage.setItem("text", data);
-            setApiData(data);
-          }
+  const fetchDataAndUpdateLocalStorage = async () => {
+    try {
+      const data = await fetchApiData();
+      if (data) {
+        const localText = localStorage.getItem("text");
+        if (localText !== data) {
+          localStorage.setItem("text", data);
+          setApiData(data);
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  useEffect(() => {
     loadTextFromLocalStorage();
-
     fetchDataAndUpdateLocalStorage();
   }, []);
 

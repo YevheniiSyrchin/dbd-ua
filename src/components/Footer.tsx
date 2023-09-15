@@ -1,38 +1,49 @@
 import React, { FC, useEffect, useState } from "react";
 
+interface DiscordData {
+  link: string;
+  image: string;
+}
+
 const Footer: FC = () => {
-  const [discordData, setDiscordData] = useState({
+  const [discordData, setDiscordData] = useState<DiscordData>({
     link: "",
     image: "",
   });
 
-  useEffect(() => {
-    const savedDiscordImage = localStorage.getItem("discordImage");
+  const fetchDiscordData = async () => {
+    try {
+      const savedDiscordImage = localStorage.getItem("discordImage");
 
-    if (savedDiscordImage) {
-      setDiscordData({
+      if (savedDiscordImage) {
+        setDiscordData((prevData) => ({
+          ...prevData,
+          image: savedDiscordImage,
+        }));
+      }
+
+      const response = await fetch(
+        "https://dbd-rest-api.eremenko.top/wp-json/get/v1/options"
+      );
+      const data = await response.json();
+      const discordLinkImage = data.response.options["discord-link-image"];
+
+      if (discordLinkImage !== savedDiscordImage) {
+        localStorage.setItem("discordImage", discordLinkImage);
+      }
+
+      setDiscordData((prevData) => ({
+        ...prevData,
         link: discordData.link,
-        image: savedDiscordImage,
-      });
+        image: discordLinkImage,
+      }));
+    } catch (error) {
+      console.error("Помилка під час запиту до API:", error);
     }
+  };
 
-    fetch("https://dbd-rest-api.eremenko.top/wp-json/get/v1/options")
-      .then((response) => response.json())
-      .then((data) => {
-        const discordLinkImage = data.response.options["discord-link-image"];
-
-        if (discordLinkImage !== savedDiscordImage) {
-          localStorage.setItem("discordImage", discordLinkImage);
-        }
-
-        setDiscordData({
-          link: discordData.link,
-          image: discordLinkImage,
-        });
-      })
-      .catch((error) => {
-        console.error("Помилка під час запиту до API:", error);
-      });
+  useEffect(() => {
+    fetchDiscordData();
   }, []);
 
   return (

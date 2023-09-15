@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { isValidLogin, isValidPassword, isValidTwitchLink } from "./validation";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -7,19 +7,23 @@ import showPasswordImage from "../assets/images/visible.png";
 import hidePasswordImage from "../assets/images/hide.png";
 import successImage from "../assets/images/success.png";
 
-const RegistrationForm = ({
-  onClose,
-  setIsLoggedIn,
-}: {
+interface RegistrationFormProps {
   onClose: () => void;
   setIsLoggedIn: (loggedIn: boolean, userHash: string | undefined) => void;
+}
+
+const RegistrationForm: FC<RegistrationFormProps> = ({
+  onClose,
+  setIsLoggedIn,
 }) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [twitchAccount, setTwitchAccount] = useState("");
-  const [loginError, setLoginError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [twitchAccountError, setTwitchAccountError] = useState("");
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [twitchAccountError, setTwitchAccountError] = useState<string | null>(
+    null
+  );
   const [loginTaken, setLoginTaken] = useState(false);
   const [showForm, setShowForm] = useState(true);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -107,21 +111,6 @@ const RegistrationForm = ({
     }
   };
 
-  const handleLoginChange = (value: string) => {
-    setLogin(value);
-    setLoginError("");
-  };
-
-  const handlePasswordChange = (value: string) => {
-    setPassword(value);
-    setPasswordError("");
-  };
-
-  const handleTwitchAccountChange = (value: string) => {
-    setTwitchAccount(value);
-    setTwitchAccountError("");
-  };
-
   const handleTogglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -134,7 +123,7 @@ const RegistrationForm = ({
 
       return () => clearTimeout(timer);
     }
-  }, [onClose]);
+  }, [onClose, showSuccessMessage]);
 
   return (
     <div>
@@ -149,7 +138,7 @@ const RegistrationForm = ({
               type="text"
               id="login"
               value={login}
-              onChange={(e) => handleLoginChange(e.target.value)}
+              onChange={(e) => setLogin(e.target.value)}
               required
             />
             {loginError && <p className="error">{loginError}</p>}
@@ -161,7 +150,7 @@ const RegistrationForm = ({
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 value={password}
-                onChange={(e) => handlePasswordChange(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <button
@@ -183,7 +172,7 @@ const RegistrationForm = ({
               type="text"
               id="twitchAccount"
               value={twitchAccount}
-              onChange={(e) => handleTwitchAccountChange(e.target.value)}
+              onChange={(e) => setTwitchAccount(e.target.value)}
             />
             {twitchAccountError && (
               <p className="error">{twitchAccountError}</p>
