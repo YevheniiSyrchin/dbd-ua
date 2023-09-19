@@ -9,6 +9,7 @@ const Navigation: FC = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false);
+  const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
 
   const handleLoginClick = () => {
     setShowLoginForm(true);
@@ -29,7 +30,25 @@ const Navigation: FC = () => {
     const userHash = Cookies.get("userHash");
 
     if (userHash) {
-      setUserLoggedIn(true);
+      fetch(
+        `https://dbd-rest-api.eremenko.top/wp-json/api/v2/authorization?hash=${userHash}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data && data.response && data.response["user-twitch-all-data"]) {
+            const { user_name } = data.response["user-twitch-all-data"];
+
+            if (user_name && user_name.toLowerCase() !== "empty") {
+              setUserDisplayName(user_name);
+            } else {
+              const { login } = data.response["user-twitch-all-data"];
+              setUserDisplayName(login || "Аккаунт");
+            }
+
+            setUserLoggedIn(true);
+          }
+        })
+        .catch((error) => console.error("Error fetching user data:", error));
     }
   }, []);
 
@@ -61,7 +80,7 @@ const Navigation: FC = () => {
         {userLoggedIn ? (
           <>
             <Link to="account" className="button">
-              Аккаунт
+              {userDisplayName || "Аккаунт"}
             </Link>
             <button className="button" onClick={handleLogout}>
               Вийти

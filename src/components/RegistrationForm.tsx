@@ -18,6 +18,7 @@ const RegistrationForm: FC<RegistrationFormProps> = ({
 }) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
   const [twitchAccount, setTwitchAccount] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -58,6 +59,7 @@ const RegistrationForm: FC<RegistrationFormProps> = ({
           params: {
             "twitch-user-login": btoa(login),
             "twitch-user-pass": btoa(password),
+            "twitch-user-nickname": btoa(nickname),
             "twitch-user-url": btoa(twitchAccount),
             "twitch-user-action": "register",
           },
@@ -166,6 +168,16 @@ const RegistrationForm: FC<RegistrationFormProps> = ({
             </div>
             {passwordError && <p className="error">{passwordError}</p>}
           </div>
+          <div className="field-form">
+            <label htmlFor="nickname">Нікнейм:</label>
+            <input
+              type="text"
+              id="nickname"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
+          </div>
+
           <div className="field-form">
             <label htmlFor="twitchAccount">Посилання на Twitch аккаунт:</label>
             <input
