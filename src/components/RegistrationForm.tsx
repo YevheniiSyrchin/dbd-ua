@@ -47,6 +47,13 @@ const RegistrationForm: FC<RegistrationFormProps> = ({
       return;
     }
 
+    if (!isValidLogin(nickname)) {
+      setLoginError(
+        "Нікнейм повинен містити від 4 до 16 символів, тільки літери англійською, цифри та підкреслення."
+      );
+      return;
+    }
+
     if (twitchAccount && !isValidTwitchLink(twitchAccount)) {
       setTwitchAccountError("Невірний формат посилання на Twitch аккаунт.");
       return;

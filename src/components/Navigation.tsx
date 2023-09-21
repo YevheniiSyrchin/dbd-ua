@@ -14,11 +14,13 @@ const Navigation: FC = () => {
   const handleLoginClick = () => {
     setShowLoginForm(true);
     setShowRegistrationForm(false);
+    setUserDisplayName(null);
   };
 
   const handleRegistrationClick = () => {
     setShowRegistrationForm(true);
     setShowLoginForm(false);
+    setUserDisplayName(null);
   };
 
   const closeForm = () => {
@@ -36,13 +38,14 @@ const Navigation: FC = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data && data.response && data.response["user-twitch-all-data"]) {
-            const { user_name } = data.response["user-twitch-all-data"];
+            const { user_name, login } = data.response["user-twitch-all-data"];
 
             if (user_name && user_name.toLowerCase() !== "empty") {
               setUserDisplayName(user_name);
+            } else if (login) {
+              setUserDisplayName(login);
             } else {
-              const { login } = data.response["user-twitch-all-data"];
-              setUserDisplayName(login || "Аккаунт");
+              setUserDisplayName("Аккаунт");
             }
 
             setUserLoggedIn(true);
@@ -50,7 +53,7 @@ const Navigation: FC = () => {
         })
         .catch((error) => console.error("Error fetching user data:", error));
     }
-  }, []);
+  }, [userDisplayName]);
 
   const handleLogout = () => {
     Cookies.remove("userHash");
