@@ -38,10 +38,12 @@ const Navigation: FC = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data && data.response && data.response["user-twitch-all-data"]) {
-            const { user_name, login } = data.response["user-twitch-all-data"];
+            const userNickname =
+              data.response["user-twitch-all-data"]["user-nickname"];
+            const login = data.response["user-twitch-all-data"]["login"];
 
-            if (user_name && user_name.toLowerCase() !== "empty") {
-              setUserDisplayName(user_name);
+            if (userNickname && userNickname.toLowerCase() !== "") {
+              setUserDisplayName(userNickname);
             } else if (login) {
               setUserDisplayName(login);
             } else {
