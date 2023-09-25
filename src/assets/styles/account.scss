@@ -1,0 +1,50 @@
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+  .item {
+    @include flex(column, center, center);
+    padding: 4px 0px;
+    border: 3px solid $darkBlue;
+    border-radius: 10px;
+    cursor: pointer;
+    &:hover {
+      img {
+        scale: 1.025;
+      }
+    }
+  }
+}
+.gallery-buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  button {
+    cursor: pointer;
+    background-color: $darkBlue;
+    color: $white;
+    height: 60px;
+    border-radius: 5px;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    padding: 0px 18px;
+    margin: 0;
+
+    &:hover {
+      scale: 1.025;
+    }
+  }
+}
+.searchInput {
+  margin: 20px 0;
+  padding: 10px;
+  color: $white;
+  background-color: $darkBlue;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 40%;
+  border: none;
+  box-sizing: border-box;
+}
