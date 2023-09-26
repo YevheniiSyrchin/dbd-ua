@@ -72,7 +72,7 @@ function TwitchStreams() {
             onClick={prevStream}
           ></button>
           <iframe
-            src={`https://player.twitch.tv/?channel=${streamerNicknames[currentStreamIndex]}&parent=dbd-ua.eremenko.top`}
+            src={`https://player.twitch.tv/?channel=${streamerNicknames[currentStreamIndex]}&parent=dbd.com.ua`}
             width="100%"
             height="450px"
           ></iframe>
