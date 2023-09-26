@@ -1,3 +1,10 @@
+.accountContainer {
+  width: 1100px;
+  padding: 30px 40px;
+  border-radius: 20px;
+  background-color: $black;
+}
+
 .gallery {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -16,10 +23,10 @@
   }
 }
 .gallery-buttons {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px 40px;
+  width: 80%;
   button {
     cursor: pointer;
     background-color: $darkBlue;
@@ -47,4 +54,28 @@
   width: 40%;
   border: none;
   box-sizing: border-box;
+}
+.description {
+  margin: 40px 0 20px;
+  text-align: center;
+}
+.saveButton {
+  margin-top: 40px;
+  cursor: pointer;
+  background-color: $white;
+  color: $darkBlue;
+  height: 50px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  padding: 0px 16px;
+  letter-spacing: 1px;
+
+  &:hover {
+    scale: 1.05;
+  }
+}
+.selected {
+  color: red;
 }

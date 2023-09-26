@@ -11,7 +11,6 @@ import UserAccount from "./components/UserAccount";
 import Footer from "./components/Footer";
 import PageMetadata from "./components/PageMetadata";
 import UserHashProvider from "./components/userHashProvider";
-import FaviconChanger from "./components/FaviconChanger";
 import "./assets/styles/styles.scss";
 
 const App: FC = () => {

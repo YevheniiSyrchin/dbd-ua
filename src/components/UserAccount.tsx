@@ -5,7 +5,7 @@ interface Killer {
   name: string;
   killer_image: string;
 }
-interface KillerPerk {
+interface KillerPerk extends Perk {
   name: string;
   perks_image: string;
 }
@@ -15,9 +15,15 @@ interface Survivor {
   survivor_image: string;
 }
 
-interface SurvivorPerk {
+interface SurvivorPerk extends Perk {
   name: string;
   perks_image: string;
+}
+
+interface Perk {
+  name: string;
+  perks_image: string;
+  posts: { [key: string]: { name: string } };
 }
 
 const KillerComponent = () => {
@@ -25,7 +31,8 @@ const KillerComponent = () => {
   const [survivors, setSurvivors] = useState<Survivor[]>([]);
   const [killersPerks, setKillersPerks] = useState<KillerPerk[]>([]);
   const [survivorsPerks, setSurvivorsPerks] = useState<SurvivorPerk[]>([]);
-  const [activeGallery, setActiveGallery] = useState("killers");
+  const [activeGallery, setActiveGallery] = useState("");
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [filteredKillers, setFilteredKillers] = useState<Killer[]>([]);
   const [filteredSurvivors, setFilteredSurvivors] = useState<Survivor[]>([]);
@@ -35,6 +42,7 @@ const KillerComponent = () => {
   const [filteredSurvivorPerks, setFilteredSurvivorPerks] = useState<
     SurvivorPerk[]
   >([]);
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(true);
 
   const handleGalleryChange = (gallery: string) => {
     setActiveGallery(gallery);
@@ -53,16 +61,39 @@ const KillerComponent = () => {
       );
       setFilteredSurvivors(filtered);
     } else if (gallery === "killerPerks") {
-      const filtered = killersPerks.filter((perk) =>
-        perk.name.toLowerCase().includes(searchKey)
-      );
+      const filtered = killersPerks.filter((perk) => {
+        const perkNameMatches = perk.name.toLowerCase().includes(searchKey);
+        const characterNameMatches = Object.values(perk.posts).some((post) =>
+          post.name.toLowerCase().includes(searchKey)
+        );
+        return perkNameMatches || characterNameMatches;
+      });
       setFilteredKillerPerks(filtered);
     } else if (gallery === "survivorPerks") {
-      const filtered = survivorsPerks.filter((perk) =>
-        perk.name.toLowerCase().includes(searchKey)
-      );
+      const filtered = survivorsPerks.filter((perk) => {
+        const perkNameMatches = perk.name.toLowerCase().includes(searchKey);
+        const characterNameMatches = Object.values(perk.posts).some((post) =>
+          post.name.toLowerCase().includes(searchKey)
+        );
+        return perkNameMatches || characterNameMatches;
+      });
       setFilteredSurvivorPerks(filtered);
     }
+  };
+
+  const handleItemClick = (itemName: string) => {
+    setSelectedItems((prevSelectedItems) => {
+      if (prevSelectedItems.includes(itemName)) {
+        return prevSelectedItems.filter((item) => item !== itemName);
+      } else {
+        return [...prevSelectedItems, itemName];
+      }
+    });
+  };
+
+  const handleSave = () => {
+    // Потім замінити відправкою масиву на серв абощо
+    console.log("Selected Items:", selectedItems);
   };
 
   useEffect(() => {
@@ -134,13 +165,16 @@ const KillerComponent = () => {
   }, []);
 
   return (
-    <main className="container toCenter">
+    <main className="accountContainer toCenter">
       <div className="gallery-buttons">
         <button
           className={`font-Roboto font-white fz-medium ${
             activeGallery === "killers" ? "active" : ""
           }`}
-          onClick={() => handleGalleryChange("killers")}
+          onClick={() => {
+            handleGalleryChange("killers");
+            setIsDescriptionVisible(false);
+          }}
         >
           Killers
         </button>
@@ -148,7 +182,10 @@ const KillerComponent = () => {
           className={`font-Roboto font-white fz-medium ${
             activeGallery === "survivors" ? "active" : ""
           }`}
-          onClick={() => handleGalleryChange("survivors")}
+          onClick={() => {
+            handleGalleryChange("survivors");
+            setIsDescriptionVisible(false);
+          }}
         >
           Survivors
         </button>
@@ -156,7 +193,10 @@ const KillerComponent = () => {
           className={`font-Roboto font-white fz-medium ${
             activeGallery === "killerPerks" ? "active" : ""
           }`}
-          onClick={() => handleGalleryChange("killerPerks")}
+          onClick={() => {
+            handleGalleryChange("killerPerks");
+            setIsDescriptionVisible(false);
+          }}
         >
           Killer Perks
         </button>
@@ -164,11 +204,23 @@ const KillerComponent = () => {
           className={`font-Roboto font-white fz-medium ${
             activeGallery === "survivorPerks" ? "active" : ""
           }`}
-          onClick={() => handleGalleryChange("survivorPerks")}
+          onClick={() => {
+            handleGalleryChange("survivorPerks");
+            setIsDescriptionVisible(false);
+          }}
         >
           Survivor Perks
         </button>
       </div>
+
+      {isDescriptionVisible && (
+        <div className="description font-Roboto font-white fz-medium">
+          <p>
+            Оберіть відсутніх Персонажів/Навички та не забудьте натистуни
+            "Зберегти".
+          </p>
+        </div>
+      )}
 
       {activeGallery === "killers" && (
         <div className="toCenter">
@@ -184,7 +236,10 @@ const KillerComponent = () => {
               filteredKillers.map((killer) => (
                 <div
                   key={killer.name}
-                  className="item font-Roboto font-white fz-small"
+                  className={`item font-Roboto font-white fz-small ${
+                    selectedItems.includes(killer.name) ? "selected" : ""
+                  }`}
+                  onClick={() => handleItemClick(killer.name)}
                 >
                   <img src={killer.killer_image} alt={killer.name} />
                   <h3>{killer.name}</h3>
@@ -208,7 +263,10 @@ const KillerComponent = () => {
               filteredSurvivors.map((survivor) => (
                 <div
                   key={survivor.name}
-                  className="item font-Roboto font-white fz-small"
+                  className={`item font-Roboto font-white fz-small ${
+                    selectedItems.includes(survivor.name) ? "selected" : ""
+                  }`}
+                  onClick={() => handleItemClick(survivor.name)}
                 >
                   <img src={survivor.survivor_image} alt={survivor.name} />
                   <h3>{survivor.name}</h3>
@@ -228,19 +286,19 @@ const KillerComponent = () => {
             className="searchInput"
           />
           <div className="gallery">
-            {filteredKillerPerks.length > 0 ? (
+            {filteredKillerPerks.length > 0 &&
               filteredKillerPerks.map((perk) => (
                 <div
                   key={perk.name}
-                  className="item font-Roboto font-white fz-small"
+                  className={`item font-Roboto font-white fz-small ${
+                    selectedItems.includes(perk.name) ? "selected" : ""
+                  }`}
+                  onClick={() => handleItemClick(perk.name)}
                 >
                   <img src={perk.perks_image} alt={perk.name} />
                   <h3>{perk.name}</h3>
                 </div>
-              ))
-            ) : (
-              <p>No matching killer perks found...</p>
-            )}
+              ))}
           </div>
         </div>
       )}
@@ -259,7 +317,10 @@ const KillerComponent = () => {
               filteredSurvivorPerks.map((perk) => (
                 <div
                   key={perk.name}
-                  className="item font-Roboto font-white fz-small"
+                  className={`item font-Roboto font-white fz-small ${
+                    selectedItems.includes(perk.name) ? "selected" : ""
+                  }`}
+                  onClick={() => handleItemClick(perk.name)}
                 >
                   <img src={perk.perks_image} alt={perk.name} />
                   <h3>{perk.name}</h3>
@@ -267,6 +328,15 @@ const KillerComponent = () => {
               ))}
           </div>
         </div>
+      )}
+
+      {activeGallery && (
+        <button
+          className="saveButton font-Roboto fz-medium"
+          onClick={handleSave}
+        >
+          Зберегти
+        </button>
       )}
     </main>
   );
