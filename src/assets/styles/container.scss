@@ -11,6 +11,7 @@
 }
 .toCenter {
   @include flex(column, center, center);
+  width: 100%;
 }
 .hidden {
   display: none;

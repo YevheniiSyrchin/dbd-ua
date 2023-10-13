@@ -4,25 +4,27 @@ import axios from "axios";
 interface Killer {
   name: string;
   killer_image: string;
+  user_selected_status: boolean;
 }
 interface KillerPerk extends Perk {
   name: string;
   perks_image: string;
+  user_selected_status: boolean;
 }
 
 interface Survivor {
   name: string;
   survivor_image: string;
+  user_selected_status: boolean;
 }
 
 interface SurvivorPerk extends Perk {
   name: string;
   perks_image: string;
+  user_selected_status: boolean;
 }
 
 interface Perk {
-  name: string;
-  perks_image: string;
   posts: { [key: string]: { name: string } };
 }
 
@@ -43,9 +45,56 @@ const KillerComponent = () => {
     SurvivorPerk[]
   >([]);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(true);
-
+  const [selectAll, setSelectAll] = useState(false);
   const handleGalleryChange = (gallery: string) => {
+    const isUserAuthenticated = !!document.cookie.includes("userHash");
+
+    if (!isUserAuthenticated) {
+      alert("Необхідна авторизація!");
+      return;
+    }
+
     setActiveGallery(gallery);
+  };
+
+  const handleSelectAll = () => {
+    let allItems: string[] = [];
+
+    if (activeGallery === "killers") {
+      allItems = killers.map((killer) => killer.name);
+    } else if (activeGallery === "survivors") {
+      allItems = survivors.map((survivor) => survivor.name);
+    } else if (activeGallery === "killerPerks") {
+      allItems = killersPerks.map((perk) => perk.name);
+    } else if (activeGallery === "survivorPerks") {
+      allItems = survivorsPerks.map((perk) => perk.name);
+    }
+
+    setSelectedItems((prevSelectedItems) => {
+      const uniqueItems = Array.from(
+        new Set([...prevSelectedItems, ...allItems])
+      );
+      return uniqueItems;
+    });
+    setSelectAll(true);
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedItems((prevSelectedItems) =>
+      prevSelectedItems.filter((item) => {
+        return (
+          (activeGallery === "killers" &&
+            !killers.some((killer) => killer.name === item)) ||
+          (activeGallery === "survivors" &&
+            !survivors.some((survivor) => survivor.name === item)) ||
+          (activeGallery === "killerPerks" &&
+            !killersPerks.some((perk) => perk.name === item)) ||
+          (activeGallery === "survivorPerks" &&
+            !survivorsPerks.some((perk) => perk.name === item))
+        );
+      })
+    );
+    setSelectAll(false);
   };
 
   const handleSearch = (gallery: string) => {
@@ -83,7 +132,8 @@ const KillerComponent = () => {
 
   const handleItemClick = (itemName: string) => {
     setSelectedItems((prevSelectedItems) => {
-      if (prevSelectedItems.includes(itemName)) {
+      const isItemSelected = prevSelectedItems.includes(itemName);
+      if (isItemSelected) {
         return prevSelectedItems.filter((item) => item !== itemName);
       } else {
         return [...prevSelectedItems, itemName];
@@ -91,77 +141,141 @@ const KillerComponent = () => {
     });
   };
 
+  useEffect(() => {
+    const autoSelectedItems: string[] = [];
+
+    autoSelectedItems.push(
+      ...filteredKillers
+        .filter((killer) => killer.user_selected_status)
+        .map((killer) => killer.name)
+    );
+
+    autoSelectedItems.push(
+      ...filteredSurvivors
+        .filter((survivor) => survivor.user_selected_status)
+        .map((survivor) => survivor.name)
+    );
+
+    autoSelectedItems.push(
+      ...filteredKillerPerks
+        .concat(filteredSurvivorPerks)
+        .filter((perk) => perk.user_selected_status)
+        .map((perk) => perk.name)
+    );
+
+    setSelectedItems((prevSelectedItems) => [
+      ...prevSelectedItems,
+      ...autoSelectedItems,
+    ]);
+  }, [
+    filteredKillers,
+    filteredSurvivors,
+    filteredKillerPerks,
+    filteredSurvivorPerks,
+  ]);
+
   const handleSave = () => {
-    // Потім замінити відправкою масиву на серв абощо
-    console.log("Selected Items:", selectedItems);
+    const isUserAuthenticated = !!document.cookie.includes("userHash");
+    if (!isUserAuthenticated) {
+      alert("Необхідна авторизація!");
+      return;
+    }
+
+    const selectedKillerData = killers
+      .filter((killer) => selectedItems.includes(killer.name))
+      .map((killer) => ({ name: killer.name }));
+
+    const selectedKillerPerksData = killersPerks
+      .filter((perk) => selectedItems.includes(perk.name))
+      .map((perk) => ({ name: perk.name }));
+
+    const selectedSurvivorData = survivors
+      .filter((survivor) => selectedItems.includes(survivor.name))
+      .map((survivor) => ({ name: survivor.name }));
+
+    const selectedSurvivorPerksData = survivorsPerks
+      .filter((perk) => selectedItems.includes(perk.name))
+      .map((perk) => ({ name: perk.name }));
+
+    let userHash = "";
+
+    if (document.cookie) {
+      const userHashCookie = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("userHash="));
+
+      if (userHashCookie) {
+        userHash = userHashCookie.split("=")[1];
+      }
+    }
+
+    const requestData = {
+      action: "save_user_account_data_action",
+      "user-hash": userHash,
+      "killer-data": selectedKillerData,
+      "killer-perks-data": selectedKillerPerksData,
+      "survivor-data": selectedSurvivorData,
+      "survivor-perks-data": selectedSurvivorPerksData,
+    };
+
+    console.log("Дані для відправки на сервер:", requestData);
+
+    const apiUrl = "https://dbd-rest-api.eremenko.top/wp-json/get/v1/options";
+
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        const ajaxUrl = data.response.options["ajax-url"];
+
+        fetch(ajaxUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   useEffect(() => {
+    setIsDescriptionVisible(activeGallery === "");
     handleSearch(activeGallery);
   }, [search, activeGallery, killers, survivors, killersPerks, survivorsPerks]);
 
   useEffect(() => {
-    const apiUrl =
-      "https://dbd-rest-api.eremenko.top/wp-json/get/v1/custom-posts?post_type=post&page-type=roulette";
+    const userHashCookie = document.cookie
+      .split(";")
+      .map((cookie) => cookie.trim())
+      .find((cookie) => cookie.startsWith("userHash="));
 
-    const fetchKillers = async () => {
-      try {
-        const response = await axios.get(apiUrl);
-        setKillers(response.data.response["killer-data"]);
-      } catch (error) {
-        console.error("Error fetching killer data:", error);
-      }
-    };
+    if (userHashCookie) {
+      const hashFromCookie = userHashCookie.split("=")[1];
+      const apiUrlWithUserHash = `https://dbd-rest-api.eremenko.top/wp-json/get/v1/custom-posts?post_type=post&page-type=roulette&twitch-user-login-hash=${hashFromCookie}`;
 
-    fetchKillers();
-  }, []);
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(apiUrlWithUserHash);
+          setKillers(response.data.response["killer-data"]);
+          setSurvivors(response.data.response["survivor-data"]);
+          setKillersPerks(response.data.response["killer-perks-data"]);
+          setSurvivorsPerks(response.data.response["survivor-perks-data"]);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
 
-  useEffect(() => {
-    const apiUrl =
-      "https://dbd-rest-api.eremenko.top/wp-json/get/v1/custom-posts?post_type=post&page-type=roulette";
-
-    const fetchSurvivors = async () => {
-      try {
-        const response = await axios.get(apiUrl);
-        setSurvivors(response.data.response["survivor-data"]);
-      } catch (error) {
-        console.error("Error fetching killer data:", error);
-      }
-    };
-
-    fetchSurvivors();
-  }, []);
-
-  useEffect(() => {
-    const apiUrl =
-      "https://dbd-rest-api.eremenko.top/wp-json/get/v1/custom-posts?post_type=post&page-type=roulette";
-
-    const fetchKillersPerks = async () => {
-      try {
-        const response = await axios.get(apiUrl);
-        setKillersPerks(response.data.response["killer-perks-data"]);
-      } catch (error) {
-        console.error("Error fetching killer data:", error);
-      }
-    };
-
-    fetchKillersPerks();
-  }, []);
-
-  useEffect(() => {
-    const apiUrl =
-      "https://dbd-rest-api.eremenko.top/wp-json/get/v1/custom-posts?post_type=post&page-type=roulette";
-
-    const fetchSurvivorsPerks = async () => {
-      try {
-        const response = await axios.get(apiUrl);
-        setSurvivorsPerks(response.data.response["survivor-perks-data"]);
-      } catch (error) {
-        console.error("Error fetching killer data:", error);
-      }
-    };
-
-    fetchSurvivorsPerks();
+      fetchData();
+    }
   }, []);
 
   return (
@@ -173,7 +287,6 @@ const KillerComponent = () => {
           }`}
           onClick={() => {
             handleGalleryChange("killers");
-            setIsDescriptionVisible(false);
           }}
         >
           Killers
@@ -184,7 +297,6 @@ const KillerComponent = () => {
           }`}
           onClick={() => {
             handleGalleryChange("survivors");
-            setIsDescriptionVisible(false);
           }}
         >
           Survivors
@@ -195,7 +307,6 @@ const KillerComponent = () => {
           }`}
           onClick={() => {
             handleGalleryChange("killerPerks");
-            setIsDescriptionVisible(false);
           }}
         >
           Killer Perks
@@ -206,7 +317,6 @@ const KillerComponent = () => {
           }`}
           onClick={() => {
             handleGalleryChange("survivorPerks");
-            setIsDescriptionVisible(false);
           }}
         >
           Survivor Perks
@@ -216,7 +326,7 @@ const KillerComponent = () => {
       {isDescriptionVisible && (
         <div className="description font-Roboto font-white fz-medium">
           <p>
-            Оберіть відсутніх Персонажів/Навички та не забудьте натистуни
+            Оберіть доступних Персонажів/Навички та не забудьте натиснути
             "Зберегти".
           </p>
         </div>
@@ -224,13 +334,28 @@ const KillerComponent = () => {
 
       {activeGallery === "killers" && (
         <div className="toCenter">
-          <input
-            type="text"
-            placeholder="Пошук..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="searchInput"
-          />
+          <div className="accountNav">
+            <button
+              className="selectButtons font-Roboto fz-medium"
+              onClick={handleSelectAll}
+            >
+              Обрати всіх
+            </button>
+            <button
+              className="selectButtons font-Roboto fz-medium"
+              onClick={handleDeselectAll}
+            >
+              Очистити
+            </button>
+
+            <input
+              type="text"
+              placeholder="Пошук..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="searchInput"
+            />
+          </div>
           <div className="gallery">
             {filteredKillers.length > 0 &&
               filteredKillers.map((killer) => (
@@ -251,13 +376,28 @@ const KillerComponent = () => {
 
       {activeGallery === "survivors" && (
         <div className="toCenter">
-          <input
-            type="text"
-            placeholder="Пошук..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="searchInput"
-          />
+          <div className="accountNav">
+            <button
+              className="selectButtons font-Roboto fz-medium"
+              onClick={handleSelectAll}
+            >
+              Обрати всіх
+            </button>
+            <button
+              className="selectButtons font-Roboto fz-medium"
+              onClick={handleDeselectAll}
+            >
+              Очистити
+            </button>
+
+            <input
+              type="text"
+              placeholder="Пошук..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="searchInput"
+            />
+          </div>
           <div className="gallery">
             {filteredSurvivors.length > 0 &&
               filteredSurvivors.map((survivor) => (
@@ -278,13 +418,29 @@ const KillerComponent = () => {
 
       {activeGallery === "killerPerks" && (
         <div className="toCenter">
-          <input
-            type="text"
-            placeholder="Пошук..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="searchInput"
-          />
+          <div className="accountNav">
+            <button
+              className="selectButtons font-Roboto fz-medium"
+              onClick={handleSelectAll}
+            >
+              Обрати всіх
+            </button>
+            <button
+              className="selectButtons font-Roboto fz-medium"
+              onClick={handleDeselectAll}
+            >
+              Очистити
+            </button>
+
+            <input
+              type="text"
+              placeholder="Пошук..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="searchInput"
+            />
+          </div>
+
           <div className="gallery">
             {filteredKillerPerks.length > 0 &&
               filteredKillerPerks.map((perk) => (
@@ -305,13 +461,29 @@ const KillerComponent = () => {
 
       {activeGallery === "survivorPerks" && (
         <div className="toCenter">
-          <input
-            type="text"
-            placeholder="Пошук..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="searchInput"
-          />
+          <div className="accountNav">
+            <button
+              className="selectButtons font-Roboto fz-medium"
+              onClick={handleSelectAll}
+            >
+              Обрати всіх
+            </button>
+            <button
+              className="selectButtons font-Roboto fz-medium"
+              onClick={handleDeselectAll}
+            >
+              Очистити
+            </button>
+
+            <input
+              type="text"
+              placeholder="Пошук..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="searchInput"
+            />
+          </div>
+
           <div className="gallery">
             {filteredSurvivorPerks.length > 0 &&
               filteredSurvivorPerks.map((perk) => (

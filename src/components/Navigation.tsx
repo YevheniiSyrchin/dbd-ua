@@ -87,9 +87,10 @@ const Navigation: FC = () => {
             <Link to="account" className="button">
               {userDisplayName || "Аккаунт"}
             </Link>
-            <button className="button" onClick={handleLogout}>
-              Вийти
-            </button>
+
+            <Link to="/" className="button" onClick={handleLogout}>
+              {"Вийти"}
+            </Link>
           </>
         ) : (
           <>
