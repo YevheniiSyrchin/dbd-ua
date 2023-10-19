@@ -17,54 +17,52 @@ const App: FC = () => {
   return (
     <Router>
       <ErrorBoundary>
-        <UserHashProvider>
-          <div className="App">
-            <Flag />
-            <Navigation />
-            <div className="content">
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <>
-                      <PageMetadata title="Головна" />
-                      <Home />
-                    </>
-                  }
-                />
-                <Route
-                  path="news"
-                  element={
-                    <>
-                      <PageMetadata title="Новини" />
-                      <News />
-                    </>
-                  }
-                />
-                <Route
-                  path="roulette"
-                  element={
-                    <>
-                      <PageMetadata title="Рулетка" />
-                      <Roulette />
-                    </>
-                  }
-                />
-                <Route
-                  path="account"
-                  element={
-                    <>
-                      <PageMetadata title="Профіль" />
-                      <UserAccount />
-                    </>
-                  }
-                />
-              </Routes>
-            </div>
-            <Aside />
-            <Footer />
+        <div className="App">
+          <Flag />
+          <Navigation />
+          <div className="content">
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <>
+                    <PageMetadata title="Головна" />
+                    <Home />
+                  </>
+                }
+              />
+              <Route
+                path="news"
+                element={
+                  <>
+                    <PageMetadata title="Новини" />
+                    <News />
+                  </>
+                }
+              />
+              <Route
+                path="roulette"
+                element={
+                  <>
+                    <PageMetadata title="Рулетка" />
+                    <Roulette />
+                  </>
+                }
+              />
+              <Route
+                path="account"
+                element={
+                  <>
+                    <PageMetadata title="Профіль" />
+                    <UserAccount />
+                  </>
+                }
+              />
+            </Routes>
           </div>
-        </UserHashProvider>
+          <Aside />
+          <Footer />
+        </div>
       </ErrorBoundary>
     </Router>
   );
