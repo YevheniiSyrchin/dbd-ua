@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import axios from "axios";
 
 interface Killer {
@@ -222,6 +223,26 @@ const KillerComponent = () => {
 
     const apiUrl = "https://dbd-rest-api.eremenko.top/wp-json/get/v1/options";
 
+    const formData = new URLSearchParams();
+    formData.append("action", "save_user_account_data_action");
+    formData.append("user-hash", userHash);
+
+    for (const killer of selectedKillerData) {
+      formData.append("killer-data", JSON.stringify(killer));
+    }
+
+    for (const perk of selectedKillerPerksData) {
+      formData.append("killer-perks-data", JSON.stringify(perk));
+    }
+
+    for (const survivor of selectedSurvivorData) {
+      formData.append("survivor-data", JSON.stringify(survivor));
+    }
+
+    for (const perk of selectedSurvivorPerksData) {
+      formData.append("survivor-perks-data", JSON.stringify(perk));
+    }
+
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
@@ -230,9 +251,9 @@ const KillerComponent = () => {
         fetch(ajaxUrl, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
           },
-          body: JSON.stringify(requestData),
+          body: formData.toString(),
         })
           .then((response) => response.json())
           .then((data) => {
@@ -253,14 +274,9 @@ const KillerComponent = () => {
   }, [search, activeGallery, killers, survivors, killersPerks, survivorsPerks]);
 
   useEffect(() => {
-    const userHashCookie = document.cookie
-      .split(";")
-      .map((cookie) => cookie.trim())
-      .find((cookie) => cookie.startsWith("userHash="));
-
-    if (userHashCookie) {
-      const hashFromCookie = userHashCookie.split("=")[1];
-      const apiUrlWithUserHash = `https://dbd-rest-api.eremenko.top/wp-json/get/v1/custom-posts?post_type=post&page-type=roulette&twitch-user-login-hash=${hashFromCookie}`;
+    const userHash = Cookies.get("userHash");
+    if (userHash) {
+      const apiUrlWithUserHash = `https://dbd-rest-api.eremenko.top/wp-json/get/v1/custom-posts?post_type=post&page-type=roulette&twitch-user-login-hash=${userHash}`;
 
       const fetchData = async () => {
         try {
