@@ -243,6 +243,11 @@ const KillerComponent = () => {
       formData.append("survivor-perks-data", JSON.stringify(perk));
     }
 
+    console.log(
+      "Дані для відправки на сервер (x-www-form-urlencoded):",
+      formData.toString()
+    );
+
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
@@ -255,7 +260,7 @@ const KillerComponent = () => {
           },
           body: formData.toString(),
         })
-          .then((response) => response.json())
+          .then((response) => response.text())
           .then((data) => {
             console.log(data);
           })
