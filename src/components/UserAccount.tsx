@@ -198,6 +198,19 @@ const KillerComponent = () => {
       .filter((perk) => selectedItems.includes(perk.name))
       .map((perk) => ({ name: perk.name }));
 
+    const selectedKillerDataArray = selectedKillerData.map((killer) => ({
+      name: killer.name,
+    }));
+    const selectedKillerPerksDataArray = selectedKillerPerksData.map(
+      (perk) => ({ name: perk.name })
+    );
+    const selectedSurvivorDataArray = selectedSurvivorData.map((survivor) => ({
+      name: survivor.name,
+    }));
+    const selectedSurvivorPerksDataArray = selectedSurvivorPerksData.map(
+      (perk) => ({ name: perk.name })
+    );
+
     let userHash = "";
 
     if (document.cookie) {
@@ -213,10 +226,10 @@ const KillerComponent = () => {
     const requestData = {
       action: "save_user_account_data_action",
       "user-hash": userHash,
-      "killer-data": selectedKillerData,
-      "killer-perks-data": selectedKillerPerksData,
-      "survivor-data": selectedSurvivorData,
-      "survivor-perks-data": selectedSurvivorPerksData,
+      "killer-data": selectedKillerDataArray,
+      "killer-perks-data": selectedKillerPerksDataArray,
+      "survivor-data": selectedSurvivorDataArray,
+      "survivor-perks-data": selectedSurvivorPerksDataArray,
     };
 
     console.log("Дані для відправки на сервер:", requestData);
@@ -227,21 +240,16 @@ const KillerComponent = () => {
     formData.append("action", "save_user_account_data_action");
     formData.append("user-hash", userHash);
 
-    for (const killer of selectedKillerData) {
-      formData.append("killer-data", JSON.stringify(killer));
-    }
-
-    for (const perk of selectedKillerPerksData) {
-      formData.append("killer-perks-data", JSON.stringify(perk));
-    }
-
-    for (const survivor of selectedSurvivorData) {
-      formData.append("survivor-data", JSON.stringify(survivor));
-    }
-
-    for (const perk of selectedSurvivorPerksData) {
-      formData.append("survivor-perks-data", JSON.stringify(perk));
-    }
+    formData.append("killer-data", JSON.stringify(selectedKillerDataArray));
+    formData.append(
+      "killer-perks-data",
+      JSON.stringify(selectedKillerPerksDataArray)
+    );
+    formData.append("survivor-data", JSON.stringify(selectedSurvivorDataArray));
+    formData.append(
+      "survivor-perks-data",
+      JSON.stringify(selectedSurvivorPerksDataArray)
+    );
 
     console.log(
       "Дані для відправки на сервер (x-www-form-urlencoded):",
@@ -260,7 +268,7 @@ const KillerComponent = () => {
           },
           body: formData.toString(),
         })
-          .then((response) => response.text())
+          .then((response) => response.json())
           .then((data) => {
             console.log(data);
           })
