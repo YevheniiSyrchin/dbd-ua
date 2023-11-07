@@ -5,12 +5,11 @@ import Flag from "./components/Flag";
 import Navigation from "./components/Navigation";
 import Aside from "./components/Aside";
 import Home from "./components/Home";
-import News from "./components/News";
 import Roulette from "./components/Roulette";
 import UserAccount from "./components/UserAccount";
 import Footer from "./components/Footer";
 import PageMetadata from "./components/PageMetadata";
-import UserHashProvider from "./components/userHashProvider";
+import RouletteFetch from "./components/RouletteFetch";
 import "./assets/styles/styles.scss";
 
 const App: FC = () => {
@@ -28,15 +27,6 @@ const App: FC = () => {
                   <>
                     <PageMetadata title="Головна" />
                     <Home />
-                  </>
-                }
-              />
-              <Route
-                path="news"
-                element={
-                  <>
-                    <PageMetadata title="Новини" />
-                    <News />
                   </>
                 }
               />

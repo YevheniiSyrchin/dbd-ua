@@ -7,6 +7,7 @@ interface Killer {
   killer_image: string;
   user_selected_status: boolean;
 }
+
 interface KillerPerk extends Perk {
   name: string;
   perks_image: string;
@@ -29,7 +30,7 @@ interface Perk {
   posts: { [key: string]: { name: string } };
 }
 
-const KillerComponent = () => {
+const UserAccount = () => {
   const [killers, setKillers] = useState<Killer[]>([]);
   const [survivors, setSurvivors] = useState<Survivor[]>([]);
   const [killersPerks, setKillersPerks] = useState<KillerPerk[]>([]);
@@ -543,4 +544,4 @@ const KillerComponent = () => {
   );
 };
 
-export default KillerComponent;
+export default UserAccount;

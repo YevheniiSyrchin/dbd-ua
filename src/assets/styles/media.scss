@@ -11,6 +11,9 @@
   .survivors {
     width: 480px;
   }
+  .roulette {
+    max-width: 800px;
+  }
 }
 @media (max-width: 1920px) {
   .accountContainer {
@@ -28,6 +31,9 @@
   .survivors {
     width: 380px;
   }
+  .roulette {
+    max-width: 720px;
+  }
 }
 @media (max-width: 1550px) {
   .accountContainer {
@@ -42,6 +48,9 @@
   .survivors {
     width: 300px;
   }
+  .roulette {
+    max-width: 600px;
+  }
 }
 @media (max-width: 1280px) {
   .accountContainer {
@@ -55,5 +64,8 @@
   }
   .survivors {
     display: none;
+  }
+  .roulette {
+    max-width: 800px;
   }
 }
