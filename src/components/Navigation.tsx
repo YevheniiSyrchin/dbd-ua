@@ -70,11 +70,7 @@ const Navigation: FC = () => {
             Головна
           </Link>
         </li>
-        <li>
-          <Link to="news" className="hidden">
-            Новини
-          </Link>
-        </li>
+
         <li>
           <Link to="roulette" className="button">
             Рулетка

@@ -69,3 +69,39 @@
     max-width: 800px;
   }
 }
+@media (max-width: 950px) {
+  .accountContainer {
+    width: 100%;
+  }
+  .container {
+    max-width: 100%;
+  }
+  .roulette {
+    max-width: 700px;
+  }
+}
+@media (max-width: 800px) {
+  .roulette {
+    max-width: 600px;
+  }
+  .roulette-buttons {
+    grid-gap: 10px 20px;
+  }
+  .gallery-buttons {
+    grid-gap: 10px 20px;
+    margin-bottom: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .roulette {
+    max-width: 500px;
+  }
+  .accountNav {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 20px;
+    .searchInput {
+      width: 100%;
+    }
+  }
+}
