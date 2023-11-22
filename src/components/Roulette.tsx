@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import RoulettePro from "react-roulette-pro";
 import "react-roulette-pro/dist/index.css";
 import RouletteKillers from "./RouletteKillers";
 import RouletteSurvivors from "./RouletteSurvivors";

@@ -9,7 +9,6 @@ import Roulette from "./components/Roulette";
 import UserAccount from "./components/UserAccount";
 import Footer from "./components/Footer";
 import PageMetadata from "./components/PageMetadata";
-import RouletteFetch from "./components/RouletteFetch";
 import "./assets/styles/styles.scss";
 
 const App: FC = () => {
